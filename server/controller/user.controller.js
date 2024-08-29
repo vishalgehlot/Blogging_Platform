@@ -4,9 +4,8 @@ import jwt from 'jsonwebtoken';
 export const SignUp = async (req, res) => {
     try {
         const result = await User.create(req.body);
-        const token = jwt.sign({ id: result._id }, 'asjdflajsdfoiajvishal');
+        return res.status(200).json({ message: "Signup Success", result });
 
-        return res.status(200).json({ message: "Signup success", result, token });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Internal server error", err });
@@ -14,21 +13,20 @@ export const SignUp = async (req, res) => {
 };
 
 export const SignIn = async (req, res) => {
+    console.log("user email", req.body);
+    console.log(res.body);
+
     try {
         const user = await User.findOne({ email: req.body.email });
-        if (!user) {
+        if (!user)
             return res.status(401).json({ message: "User not found" });
-        }
+
         const isMatch = await user.comparePass(req.body.password);
-        if (!isMatch) {
+        if (!isMatch)
             return res.status(401).json({ message: "Invalid credentials" });
-        }
-        const payload = {
-            user: {
-                id: user.id
-            }
-        };
-        const token = jwt.sign(payload, 'asjdflajsdfoiajvishal', { expiresIn: '24h' });
+
+        const token = jwt.sign({ id: user._id, email: user.email }, "bylooptechnology", { expiresIn: '7d' });
+
 
         return res.status(200).json({ message: "Sign in success", token, user });
     } catch (error) {

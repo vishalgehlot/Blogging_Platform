@@ -7,6 +7,7 @@ export const createPost = async (req, res) => {
       content: req.body.content,
       author: req.user._id,
     });
+
     await post.save();
     return res.status(201).json({ message: 'Blog post created successfully', post });
   } catch (error) {

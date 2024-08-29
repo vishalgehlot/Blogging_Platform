@@ -3,14 +3,15 @@ import './BlogPost.css';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import PosList from './Blog/PostList';
 
 function BlogPost() {
   const navigate = useNavigate();
-  const isLoggedIn = false;
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   const handleCreateBlog = () => {
     if (isLoggedIn) {
-      navigate('/createt');
+      navigate('/create-post');
     } else {
       navigate('/signup');
     }
@@ -144,8 +145,8 @@ function BlogPost() {
               borderRadius: '5px'
             }}>Create Blog Post</button>
         </div>
-
       </div>
+      <PosList />
     </>
   );
 }

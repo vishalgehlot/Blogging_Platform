@@ -9,6 +9,8 @@ import BlogPost from './component/BlogPost';
 
 import CreatePost from './component/Blog/CreatePost';
 import EditPost from './component/Blog/EditPost';
+import PostDetail from './component/Blog/PostDetail';
+import PosList from './component/Blog/PostList';
 
 
 function App() {
@@ -21,8 +23,10 @@ function App() {
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/footer' element={<Footer />} />
-        <Route path='/create' element={<CreatePost />} />
+        <Route path='/create-post' element={<CreatePost />} />
         <Route path='/edit/:id' element={<EditPost />} />
+        <Route path="/post" element={<PostDetail />} />
+        <Route path='/postlist' element={<PosList />}></Route>
       </Routes>
     </div>
   );

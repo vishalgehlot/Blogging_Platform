@@ -86,7 +86,7 @@ const SignIn = () => {
           }}>Sign In</h2>
 
           <div className="form-group" style={{ marginBottom: '15px' }}>
-            <label htmlFor="email" style={{ display: 'block', color: '#333', marginBottom: '5px' }}>Email</label>
+            <label htmlFor="email" style={{ display: 'block', color: '#333', marginBottom: '5px', marginRight: '100%' }}>Email</label>
             <input
               id="email"
               onChange={(event) => setEmail(event.target.value)}
@@ -104,7 +104,7 @@ const SignIn = () => {
           </div>
 
           <div className="form-group" style={{ marginBottom: '15px' }}>
-            <label htmlFor="password" style={{ display: 'block', color: '#333', marginBottom: '5px' }}>Password</label>
+            <label htmlFor="password" style={{ display: 'block', color: '#333', marginBottom: '5px', marginRight: '100%' }}>Password</label>
             <input
               id="password"
               onChange={(event) => setPassword(event.target.value)}
