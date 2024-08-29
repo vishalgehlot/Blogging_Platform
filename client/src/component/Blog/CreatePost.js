@@ -28,7 +28,6 @@ const CreatePost = () => {
       console.log(response)
       if (response.status === 201) {
         toast.success('Blog post created successfully!');
-        alert("chala re bhai")
         navigate('/');
       } else {
         toast.error('Failed to create blog post');

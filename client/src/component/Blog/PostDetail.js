@@ -1,16 +1,16 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const PostDetails = () => {
   const { state } = useLocation();
-  // const { post, setisUpdated, isUpdated } = state;
   const { post } = state;
 
   const [showModal, setShowModal] = useState(false);
   const [editedTitle, setEditedTitle] = useState(post.title);
   const [editedContent, setEditedContent] = useState(post.content);
+  const [currentPost, setCurrentPost] = useState(post);
 
   const currentUser = localStorage.getItem("currentUser");
 
@@ -18,21 +18,33 @@ const PostDetails = () => {
   const handleCloseModal = () => setShowModal(false);
 
   const handleSaveChanges = () => {
-    const data = { content: editedContent, title: editedTitle }
-    axios.put(`http://localhost:3000/blogpost/update/${post._id}`, data, {
+    const updatedPost = { content: editedContent, title: editedTitle };
+
+    axios.put(`http://localhost:3000/blogpost/update/${post._id}`, updatedPost, {
       headers: {
-        Authorization: `Berear ${localStorage.getItem("authToken")}`
-      }
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
     })
       .then(response => {
         console.log(response);
-        // setisUpdated(!isUpdated);
+        setCurrentPost(prevPost => ({
+          ...prevPost,
+          title: editedTitle,
+          content: editedContent,
+        }));
       })
       .catch(error => {
         console.log(error);
-      })
+      });
 
     handleCloseModal();
+  };
+
+  const navigate = useNavigate();
+
+  const handleViewClick = () => {
+    alert('Check the data in Blog format in Home');
+    navigate('/');
   };
 
   return (
@@ -41,24 +53,35 @@ const PostDetails = () => {
         <div className="col-lg-8">
           <div className="card shadow-sm">
             <div className="card-body">
-              <h2 className="text-center" style={{ fontWeight: 'bold', color: '#343a40' }}>{post.title}</h2>
-              <h6 className="text-center text-muted mb-4">by {post.author ? post.author.name : "Unknown"}</h6>
+              <h2 className="text-center" style={{ fontWeight: 'bold', color: '#343a40' }}>
+                {currentPost.title}
+              </h2>
+              <h6 className="text-center text-muted mb-4">
+                by {currentPost.author ? currentPost.author.name : "Unknown"}
+              </h6>
 
               <div className="mt-4">
                 <p className="lead" style={{ fontSize: '1.2rem', lineHeight: '1.6', color: '#555' }}>
-                  {post.content}
+                  {currentPost.content}
                 </p>
               </div>
 
-              {post.author && currentUser === post.author.email && (
+              {currentPost.author && currentUser === currentPost.author.email && (
                 <div className="text-center mt-4">
-                  <Button variant="warning" onClick={handleShowModal} style={{
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    color: '#212529',
-                  }}>
+                  <Button
+                    variant="warning"
+                    onClick={handleShowModal}
+                    style={{
+                      padding: '10px 20px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      color: '#212529',
+                    }}
+                  >
                     Edit Post
+                  </Button>
+                  <Button className='ml-3' variant="info" onClick={handleViewClick}>
+                    View
                   </Button>
                 </div>
               )}
@@ -72,6 +95,7 @@ const PostDetails = () => {
         <Modal.Header closeButton>
           <Modal.Title>Edit Post</Modal.Title>
         </Modal.Header>
+
         <Modal.Body>
           <Form>
             <Form.Group controlId="formTitle">
@@ -93,6 +117,7 @@ const PostDetails = () => {
             </Form.Group>
           </Form>
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
@@ -100,6 +125,7 @@ const PostDetails = () => {
           <Button variant="primary" onClick={handleSaveChanges}>
             Save Changes
           </Button>
+
         </Modal.Footer>
       </Modal>
     </div>
